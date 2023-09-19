@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "jExam Grader",
+  "version": "1.0",
+
+  "description": "Calculate and display the provisional final grade for your computer science degree @TU-Dresden.",
+
+  "icons": {
+    "48": "icons/grader-48.png",
+    "64": "icons/grader-64.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": [
+        "*://jexam.inf.tu-dresden.de/de.jexam.web.v5/spring/exams/results"
+      ],
+      "js": ["grader.js"]
+    }
+  ]
+}
