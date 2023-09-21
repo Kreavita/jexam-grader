@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "jExam Grader",
-  "version": "1.0",
+  "version": "1.1",
 
   "description": "Calculate and display the provisional final grade for your computer science degree @TU-Dresden.",
 
