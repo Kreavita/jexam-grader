@@ -1,0 +1,123 @@
+:root {
+  --green: rgb(73, 182, 73);
+  --red: rgb(245, 61, 110);
+  --dark: #151515;
+  --lighter: #1a1a1a;
+  --text: #ffffff;
+  --light-gray: #acacac;
+}
+
+html {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+}
+
+body {
+  background-color: var(--dark);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0.5rem;
+}
+
+body > div:nth-child(1),
+div:nth-child(2) {
+  width: 100%;
+}
+
+input {
+  background-color: var(--lighter);
+  border: none;
+  width: 2em;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+a {
+  color: var(--text);
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: var(--light-gray);
+}
+
+.bold {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.mark-wrapper {
+  background-color: var(--lighter);
+  border-radius: 50%;
+  width: 6.5rem;
+  height: 6.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0.5rem 0;
+}
+
+.mark,
+input[type="text"] {
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: var(--green);
+}
+
+.mark {
+  display: block;
+}
+
+.red {
+  color: var(--red);
+}
+
+.additional-grades {
+  padding-top: 1rem;
+  display: grid;
+  grid-template: auto / 5.5rem auto;
+  grid-gap: 0.5rem;
+  align-content: flex-start;
+}
+
+.additional-grades > .cell {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  line-height: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.additional-grades > .cell:nth-child(1) {
+  grid-column-start: 1;
+  grid-column-end: 4;
+  grid-row: 1;
+}
+.additional-grades > .cell:nth-child(3),
+.cell:nth-child(5),
+.cell:nth-child(7),
+.cell:nth-child(9) {
+  grid-column: 3;
+}
+
+.additional-grades > .cell:nth-child(2),
+.cell:nth-child(3) {
+  grid-row: 3;
+}
+.additional-grades > .cell:nth-child(4),
+.cell:nth-child(5) {
+  grid-row: 4;
+}
+.additional-grades > .cell:nth-child(6),
+.cell:nth-child(7) {
+  grid-row: 5;
+}
+.additional-grades > .cell:nth-child(8),
+.cell:nth-child(9) {
+  grid-row: 6;
+}

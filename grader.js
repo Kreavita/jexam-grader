@@ -24,72 +24,81 @@ const creditsMap = new Map(
     "INF-B-470": 3, // Medienpsychologie und -didaktik
     "INF-B-480": 5, // Web- und Multimedia Engineering
     "INF-B-490": 9, // Medieninformatik-Projekt
-    "INF-B-510": 12, // Vertiefung in der Informatik
+    /*"INF-B-510": 12, // Vertiefung in der Informatik
     "INF-B-520": 12, // Spezialisierung in der Informatik
     "INF-B-610": 5, // Überfachliche Qualifikationen zur Informatik
-    "Bachelor-Arbeit": 52,
+    "Bachelor-Arbeit": 52,*/
   })
 );
 
-const jExamModuleParser = (mod) => {
-  let it = creditsMap.entries();
+const parseModule = (mod) => {
   let titleElement = mod.children[0].children[0].querySelector(
     "div:nth-child(1) > div:nth-child(1) > span:nth-child(2)"
   );
   let markElement = mod.children[0].querySelector(
     "div.cell:nth-child(2) > div.mark-wrapper:nth-child(1) > span.mark:nth-child(2)"
   );
+
   if (markElement == null || titleElement == null) {
     return null;
   }
 
   let grade = parseFloat(markElement.innerText);
-  let title = titleElement.innerText;
 
   if (grade == 5.0) {
     return null; // unfinished/failed modules do not count into the calculation
   }
 
-  while ((entry = it.next()) !== undefined) {
+  let title = titleElement.innerText;
+  let creditsIterator = creditsMap.entries();
+
+  while ((entry = creditsIterator.next()) !== undefined) {
     if (title.includes(entry.value[0])) {
-      console.log({ credit: entry.value[1], grade: grade });
-      return { credit: entry.value[1], grade: grade };
+      return {
+        module: entry.value[0],
+        credit: entry.value[1],
+        grade: grade,
+      };
     }
   }
+
   return null;
 };
 
-(() => {
-  let header = document.getElementsByClassName("button-heading");
-  let csModulesContainer = document.getElementsByClassName("module");
+const aggregateCourses = () => {
+  const csModulesContainers = document.getElementsByClassName("module");
 
-  if (header.length != 1 || csModulesContainer.length != 1) {
+  if (csModulesContainers.length == 0) {
+    console.log("Module Containers not found");
+    return [];
+  }
+
+  let jExamModules = [];
+
+  for (const container of csModulesContainers) {
+    jExamModules = jExamModules.concat(Array.from(container.children).slice(1)); // skip the first, since its not a module
+  }
+
+  return jExamModules
+    .map((module) => parseModule(module))
+    .filter((module) => module != null);
+};
+
+(() => {
+  const courses = aggregateCourses();
+
+  if (courses.length == 0) {
+    console.error("jExam Grader: No Courses found!");
     return;
   }
 
-  let jExamModules = Array.from(csModulesContainer.item(0).children).slice(1); // skip the first, its not a module
+  console.log(courses);
 
-  let grades = []; // format: {"grade": x.x, "credits" : xx}
-  jExamModules.forEach((mod) => {
-    let grade = jExamModuleParser(mod);
-    if (grade != null) {
-      grades.push(grade);
-    }
+  browser.storage.local.set({ courses }).then(() => {
+    console.info("jExam Grader: updated courses");
   });
 
-  console.log(grades);
-
-  let weighedSum = grades.reduce(
-    (acc, grade) => acc + grade.credit * grade.grade,
-    0
-  );
-
-  let credits = grades.reduce((acc, grade) => acc + grade.credit, 0);
-
-  console.log(credits);
-  console.log(weighedSum);
-
-  let finalGrade = Math.round((100 * weighedSum) / credits) / 100;
-
-  header.item(0).children[0].innerHTML += ": " + finalGrade;
+  /*const title = document.getElementsByClassName("button-heading").item(0)
+    .children[0];
+  title.innerText += ": " + finalGrade; */
 })();
